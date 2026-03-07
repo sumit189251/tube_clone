@@ -8,7 +8,7 @@ const connectDB = async () => {
      console.log(`database connect !! DB host ${cannectionInstance.connection.host}`);
     
   } catch (error) {
-    console.log(`error of cannection this ${error}`)
+    console.log(`error of canection this ${error}`)
     process.exit(1)
     
   }
