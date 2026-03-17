@@ -9,24 +9,26 @@ import fs from "fs";
         api_secret: process.env.CLOUD_API_SECRET 
     })
 
+   
 
-     uploadOnCloudinary = async (localFilePath) =>{
+     const uploadOnCloudinary = async (localFilePath) =>{
       try {
         if(!localFilePath) return null
         //uplode the file on cloudnary//
-        const responce = await cloudinary.uploader(localFilePath,{ resource_type:"auto"})
+        const response = await cloudinary.uploader.upload(localFilePath,{ resource_type:"auto"})
+        fs.unlinkSync(localFilePath)
+        return response;
 
         //file uplode successful//
-        console.log("file uploaded on cloudinary",responce.url);
-        return responce;
         
       } catch (error) {
-        fs.unlink(localFilePath)//remove localy file jab save na ho//
+        console.log("cloudinary uplode error:",error)
+        fs.unlinkSync(localFilePath)//remove localy file jab save na ho//
         return null;
         
       }
      }
-     export {uploadOnCloudinary}
+     export{uploadOnCloudinary}
 
 
    

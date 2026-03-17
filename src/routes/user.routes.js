@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { registeruser } from "../cantrollers/user.cantroller.js";
+import { registeruser , loginUser,logoutuser } from "../cantrollers/user.cantroller.js";
 import {upload} from "../middleware/multer.middleware.js"
+import {verifyJWT} from   "../middleware/auth_middleware.js"
 
 const router = Router();
 
@@ -17,6 +18,14 @@ router.route("/register").post(
     }
   ]),
   registeruser)
+
+router.route("/login").post(loginUser) 
+router.route("/logout").post(verifyJWT,logoutuser) 
+
+
+
+
+  
 
 
 

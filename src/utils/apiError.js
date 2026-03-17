@@ -1,8 +1,8 @@
-class apiError extends  error{
+class apiError extends  Error{
   constructor(
     statusCode,
     massage= "somthing want wrong",
-    errors = [],
+    error = [],
     stack = ""
   ){
     super(massage)
@@ -10,7 +10,7 @@ class apiError extends  error{
     this.data = null
     this.massage = massage
     this.success =false;
-    this.errors= errors
+    this.errors= error
 
     if(stack){
       this.stack=stack
