@@ -7,17 +7,18 @@ import {apiResponce} from "../utils/apiResponce.js"
 //one functionn to  bhe genrate access token and refersh token
 const genrateaccessANDreferesToken = async(userID)=> {
     try {
-        const user = await  user.findById(userID)
+        const User = await  user.findById(userID)
 
-        const accesstoken = user.generateAccessToken
+        const accesstoken = User.generateAccessToken()
 
-        const refreshToken = user.generateRefreshToken
+        const refreshToken = User.generateRefreshToken()
 
-        user.refreshToken = refreshToken
-       await user.save({validateBeforeSave : false})
+        User.refreshToken = refreshToken
+       await User.save({validateBeforeSave : false})
        return{accesstoken , refreshToken}
         
     } catch (error){
+        console.log("ya waja hai :=",error)
          throw new apiError(500,"something went wrong while generating referesh and access token")
         
     }
@@ -113,33 +114,39 @@ const loginUser = asyncHandler(async(req,res,next)=>{
      //get email/user id request body   
 
    const {username,email,password} = req.body
+   console.log("RECV DATA :", req.body)
 
    if((!username && !email)){
     throw new apiError (400,"username or email is required")
    }
 
     
-   //check username or email are qegister
+   //check username or email are register
 
-   const User = await user.findOne({
-        $or:[{username},{email}]
+   const Userf = await user.findOne({
+        $or:[{username : username},{email: email}]
+
+       
     
-   })
-   if(!User){
+   });
+    console.log("DATA BAS SA :",Userf)
+   if(!Userf){
         throw new apiError(404,"user not register")
     }
     // agar user mill jya to password check karanga
 
-  const ispasswordvalid = await User.isPasswordCorrect(paddword)
+  const ispasswordvalid = await Userf.isPasswordCorrect(password)
   if(!ispasswordvalid){ 
         throw new apiError(404,"your password is not correct")
     }
 
     //access or referesh token genrate to call function
+  
 
-   const{accesstoken,refreshToken}  = await genrateaccessANDreferesToken (user._id)
+   const{accesstoken,refreshToken}  = await genrateaccessANDreferesToken (Userf._id)
+  
 
-   const loggedinuser = await user.findById(user._id).select("-password -refreshToken")
+   const loggedinuser = await user.findById(Userf._id).select("-password -refreshToken")
 
    //sand cookes
 
